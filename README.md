@@ -1,135 +1,263 @@
-AI-Powered Travel Policy Chatbot using Amazon Lex and Amazon Bedrock
+# Enterprise AI Knowledge Base Chatbot using Amazon Lex, Amazon Bedrock, and Retrieval-Augmented Generation (RAG)
 
-Overview
+## Project Overview
 
-This project demonstrates the development of an AI-powered chatbot using Amazon Lex and Amazon Bedrock. The chatbot answers questions about company travel policies by retrieving information from documents stored in Amazon S3 and using Retrieval-Augmented Generation (RAG) to generate responses.
+Designed and implemented a cloud-native Generative AI chatbot capable of answering questions from enterprise documents using Amazon Bedrock Knowledge Bases and Amazon Lex. The solution leverages Retrieval-Augmented Generation (RAG), vector embeddings, semantic search, and foundation models to provide context-aware responses grounded in organizational knowledge.
 
-Architecture
+The system enables users to interact with company policies through natural language while reducing hallucinations by retrieving relevant source documents before generating responses.
+
+---
+
+## Business Problem
+
+Traditional chatbots require manually created intents, utterances, and predefined responses for every possible user question. This becomes difficult to scale as document repositories grow.
+
+The objective was to build an intelligent conversational assistant capable of:
+
+* Understanding natural language questions
+* Retrieving relevant information from enterprise documents
+* Generating accurate responses based on company knowledge
+* Reducing manual chatbot maintenance
+* Improving information accessibility
+
+---
+
+## Solution Architecture
 
 User
 ↓
 Amazon Lex
 ↓
-Amazon Bedrock Knowledge Base
+QnA Intent
 ↓
-Vector Store (Embeddings)
+Amazon Bedrock
 ↓
-Amazon S3 Documents
+Knowledge Base
 ↓
-Foundation Model (Claude/Titan)
+Vector Store
+↓
+Amazon S3
+↓
+Claude Foundation Model
 ↓
 Response
 
-AWS Services Used
+---
 
-* Amazon Lex
-* Amazon Bedrock
-* Amazon Bedrock Knowledge Bases
-* Amazon S3
-* Amazon Titan Embeddings
-* IAM Roles
-* Vector Store (OpenSearch Serverless or S3 Vectors)
+## AWS Services Utilized
 
-Features
+### Amazon Lex
 
-* Conversational chatbot interface
-* Retrieval-Augmented Generation (RAG)
-* Semantic search using embeddings
-* Answers based on company documents
-* Dynamic AI-generated responses
-* Integration with Amazon Bedrock foundation models
+Implemented the conversational interface and intent management layer.
 
-Implementation Steps
+Responsibilities:
 
-Step 1: Upload Documents
+* User interaction
+* Intent classification
+* Utterance recognition
+* Conversation management
+* Session handling
 
-Created an Amazon S3 bucket and uploaded travel policy documents including:
+### Amazon Bedrock
 
-* Travel Policies
-* Visa Requirements
-* Travel Restrictions
-* Itinerary Information
+Provided access to foundation models and orchestration of Retrieval-Augmented Generation workflows.
 
-Step 2: Create a Bedrock Knowledge Base
+Responsibilities:
 
-Configured an Amazon Bedrock Knowledge Base connected to the S3 bucket.
+* Foundation model inference
+* Prompt orchestration
+* Context injection
+* Response generation
 
-Step 3: Generate Embeddings
+### Amazon Bedrock Knowledge Bases
 
-Used Amazon Titan Embeddings to convert document text into vector embeddings for semantic search.
+Implemented managed Retrieval-Augmented Generation (RAG).
 
-Step 4: Configure Vector Storage
+Responsibilities:
 
-Stored document embeddings in a vector database to enable similarity searches.
+* Document ingestion
+* Chunking
+* Embedding generation
+* Semantic retrieval
+* Context management
 
-Step 5: Create Amazon Lex Bot
+### Amazon S3
 
-Created a chatbot using Amazon Lex.
+Served as the centralized enterprise document repository.
 
-#### Welcome Intent
+Stored:
 
-Sample utterances:
+* Travel policies
+* Visa requirements
+* Employee guidelines
+* Operational documentation
 
-* Hi
-* Hello
-* Howdy
-* Good Morning
+### Titan Embeddings G1
 
-Bot response:
+Generated vector embeddings from document content.
 
-"Hi! How can I help you today?"
+Responsibilities:
 
-### Step 6: Add Amazon QnA Intent
+* Text vectorization
+* Semantic representation
+* Similarity search enablement
 
-Configured the built-in Amazon QnA Intent to:
+### Vector Store
 
-* Connect to the Bedrock Knowledge Base
-* Retrieve relevant information
-* Generate answers using a foundation model
+Stored embedding vectors for efficient semantic search.
 
-Step 7: Test the Chatbot
+Responsibilities:
 
-Example questions:
+* Nearest-neighbor search
+* Similarity matching
+* Context retrieval
 
-* What are the visa requirements for Mars?
-* Should I get travel insurance?
-* What travel expenses are reimbursable?
-* Can I bring pets?
+### IAM
 
-Key Concepts Learned
+Implemented secure access controls using least-privilege principles.
 
-Retrieval-Augmented Generation (RAG)
+Responsibilities:
 
-RAG combines:
+* Service roles
+* Resource permissions
+* Cross-service authorization
 
-* A foundation model (LLM)
-* A knowledge source
-* A retrieval mechanism
+---
 
-Relevant information is retrieved from company documents and supplied to the model before generating a response.
+## Retrieval-Augmented Generation Workflow
 
-Embeddings
+### Step 1: User Query
 
-Embeddings are numerical representations of text that capture semantic meaning. Similar content produces similar vectors, allowing efficient document retrieval.
+Example:
 
-### Knowledge Base
+"What are the visa requirements for Mars?"
 
-The Bedrock Knowledge Base indexes organizational documents and retrieves relevant information to support AI-generated answers.
+### Step 2: Query Embedding
+
+The user query is converted into a numerical vector representation using the Titan Embeddings model.
+
+### Step 3: Semantic Retrieval
+
+The vector store performs similarity searches against indexed document embeddings.
+
+Relevant document chunks are identified based on semantic meaning rather than exact keyword matching.
+
+### Step 4: Context Augmentation
+
+Retrieved document chunks are supplied as context to the foundation model.
+
+### Step 5: Response Generation
+
+Claude generates a grounded response using:
+
+* User question
+* Retrieved context
+* Foundation model reasoning
+
+### Step 6: Response Delivery
+
+Amazon Lex returns the generated response to the user.
+
+---
+
+## Technical Concepts Demonstrated
+
+### Retrieval-Augmented Generation (RAG)
+
+Implemented a production-style RAG architecture to improve response accuracy and reduce hallucinations.
+
+### Vector Embeddings
+
+Utilized dense vector representations to capture semantic relationships between queries and documents.
+
+### Semantic Search
+
+Enabled context retrieval based on meaning rather than keyword matching.
+
+### Foundation Models
+
+Integrated large language models through Amazon Bedrock.
+
+### Conversational AI
+
+Built a multi-turn conversational experience using Amazon Lex.
+
+### Cloud-Native Architecture
+
+Designed using fully managed AWS services with minimal infrastructure management.
+
+---
+
+## Security Considerations
+
+* IAM service roles for Bedrock access
+* Principle of least privilege
+* Secure S3 document storage
+* Managed AWS authentication and authorization
+* Resource-level permissions
+
+---
+
+## Challenges and Lessons Learned
+
+### Challenge 1
+
+Understanding how embeddings transform natural language into vector representations.
+
+### Resolution
+
+Studied semantic similarity and vector search concepts to understand how RAG systems retrieve relevant information.
+
+### Challenge 2
+
+Understanding the relationship between Lex, Bedrock, Knowledge Bases, and Foundation Models.
+
+### Resolution
+
+Designed an end-to-end architecture showing how user requests flow through retrieval and generation pipelines.
+
+### Challenge 3
+
+Managing permissions between AWS services.
+
+### Resolution
+
+Configured IAM execution roles to enable secure Bedrock access to S3 and vector stores.
+
+---
 
 ## Skills Demonstrated
 
-* Cloud Computing
-* AWS Services
-* Amazon Lex
 * Amazon Bedrock
-* Generative AI
+* Amazon Lex
 * Retrieval-Augmented Generation (RAG)
-* IAM
 * Vector Databases
-* Knowledge Bases
-* Conversational AI
 * Semantic Search
+* Foundation Models
+* IAM
+* S3
+* Generative AI
+* Cloud Architecture
+* Conversational AI
+* System Design
+* AI Engineering
+* Prompt Engineering
 
-Outcome
+---
 
-Successfully built an AI-powered chatbot capable of answering questions using custom organizational documents stored in Amazon S3 through Amazon Bedrock Knowledge Bases and Amazon Lex.
+## Future Enhancements
+
+* Integrate Amazon OpenSearch Serverless for enterprise-scale vector search
+* Implement citation generation for retrieved documents
+* Add multi-language support
+* Implement conversation memory
+* Add Bedrock Guardrails
+* Deploy a React-based web interface
+* Implement monitoring using CloudWatch
+* Add Lambda orchestration for custom workflows
+
+---
+
+## Resume Impact
+
+Built an enterprise-style Generative AI chatbot using Amazon Lex, Amazon Bedrock Knowledge Bases, Titan Embeddings, and Retrieval-Augmented Generation (RAG), enabling semantic search and context-aware responses from organizational documents stored in Amazon S3.
